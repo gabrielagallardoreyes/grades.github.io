@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Calificación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center">
+            <h1>Editar Calificación</h1>
+            <a href="/dashboard" class="btn btn-info" >Dashboard</a>
+            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+        </header>
+        <!-- MENSAJES DE ERROR -->
+        {% with messages = get_flashed_messages(category_filter=['grades']) %}
+                    {% if messages %}
+                        <div class="alert alert-danger">
+                            {% for message in messages %}
+                                <p>{{message}}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+        <!-- FORMULARIO -->
+        <form action="/update/grade" method="post">
+            <div>
+                <label>Alumno</label>
+                <input type="text" name="student" class="form-control" value="{{grade.student}}" >
+            </div>
+            <div>
+                <label>Stack</label>
+                <select name="stack" class="form-select">
+                    <option {% if grade.stack == 'Python'%} selected {% endif %}>Python</option>
+                    <option {% if grade.stack == 'Java'%} selected {% endif %}>Java</option>
+                    <option {% if grade.stack == 'MERN'%} selected {% endif %}>MERN</option>
+                </select>
+            </div>
+            <div>
+                <label>Fecha de Presentación</label>
+                <input type="date" name="date" class="form-control" value="{{grade.date}}" >
+            </div>
+            <div>
+                <label>Calificación</label>
+                <input name="grade" class="form-control" value="{{grade.grade}}">
+            </div>
+            <div>
+                <label>Cinturón</label>
+                <select name="belt" class="form-select">
+                    <option {% if grade.belt == 'Negro'%} selected {% endif %}>Negro</option>
+                    <option {% if grade.belt == 'Rojo'%} selected {% endif %}>Rojo</option>
+                    <option {% if grade.belt == 'Naranja'%} selected {% endif %}>Naranja</option>
+                    <option {% if grade.belt == 'Sin Cinturón'%} selected {% endif %}>Sin Cinturón</option>
+                </select>
+            </div>
+            <input type="hidden" name="user_id" value="{{session['user_id']}}" >
+            <input type="hidden" name="id" value="{{grade.id}}" >
+            <input type="submit" class="btn btn-success mt-3" value="Guardar Calificación">
+        </form>
+    </div>
+</body>
+</html>

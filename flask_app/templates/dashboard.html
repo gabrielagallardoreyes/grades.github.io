@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center">
+            <h1>¡Bienvenid@ {{ user.first_name}} !</h1>
+            <a href="/new/grade" class="btn btn-success" >Nueva Calificación</a>
+            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+        
+        </header>
+        <small> La fecha actual es: {{now()}}</small>
+        <h2>Calificaciones Pasadas</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre del Alumno</th>
+                    <th>Stack</th>
+                    <th>Fecha del Examen</th>
+                    <th>Calificación</th>
+                    <th>Cinturón</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades if grade.date < now().date() %}
+                    {% if grade.user_id == session['user_id']%}
+                    <tr>
+                        <td>{{grade.student}}</td>
+                        <td>{{grade.stack}}</td>
+                        <td>{{grade.date}}</td>
+                        <td>{{grade.grade}}</td>
+                        <td>{{grade.belt}}</td>
+                        <td>
+                            {% if grade.belt != 'Sin Cinturón' %}
+                            <a href="/edit/grade/{{grade.id}}" class="btn btn-warning">Editar</a>
+                            <a href="/delete/grade/{{grade.id}}" class="btn btn-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif%}
+                {% endfor %}
+            </tbody>
+
+        </table>
+        <h2>Calificaciones de Hoy</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre del Alumno</th>
+                    <th>Stack</th>
+                    <th>Fecha del Examen</th>
+                    <th>Calificación</th>
+                    <th>Cinturón</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades if grade.date == now().date() %}
+                    {% if grade.user_id == session['user_id']%}
+                    <tr>
+                        <td>{{grade.student}}</td>
+                        <td>{{grade.stack}}</td>
+                        <td>{{grade.date.strftime('%d/%b/%Y')}}</td>
+                        <td>{{grade.grade}}</td>
+                        <td>{{grade.belt}}</td>
+                        <td>
+                            {% if grade.belt != 'Sin Cinturón' %}
+                            <a href="/edit/grade/{{grade.id}}" class="btn btn-warning">Editar</a>
+                            <a href="/delete/grade/{{grade.id}}" class="btn btn-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif%}
+                {% endfor %}
+            </tbody>
+
+        </table>
+        <div class="bg-success">
+            <h2>Calificaciones de otros profesores</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre del Alumno</th>
+                        <th>Stack</th>
+                        <th>Fecha del Examen</th>
+                        <th>Calificación</th>
+                        <th>Cinturón</th>
+                        <th>Profesor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades if grade.user_id != session['user_id'] %}
+                        <tr>
+                            <td>{{grade.student}}</td>
+                            <td>{{grade.stack}}</td>
+                            <td>{{grade.date}}</td>
+                            <td>{{grade.grade}}</td>
+                            <td>{{grade.belt}}</td>
+                            <td>{{grade.first_name}}{{grade.last_name}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        
+    </div>
+</body>
+</html>
